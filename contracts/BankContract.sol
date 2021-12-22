@@ -20,13 +20,14 @@ contract Bank is Ownable, Destroyable {
         return balance[msg.sender];
     }
 
-    function withdraw(uint amount) public onlyOwner returns (uint) {
+    function withdraw(uint amount) public payable onlyOwner returns (uint) {
         require(balance[msg.sender] >= amount);
         payable(msg.sender).transfer(amount);
+        balance[msg.sender] -= amount;
         return balance[msg.sender];
     }
 
-    function transfer(address recipient, uint amount) public {
+    function transfer(address recipient, uint amount) public payable {
         require(balance[msg.sender] >= amount, "Balance not sufficient");
         require(msg.sender != recipient, "Don't transfer funds to yourself");
         uint previousSenderBalance = balance[msg.sender];
